@@ -1,25 +1,9 @@
-# mdx-deck basic template
+# Music 101 with JS Bach
 
-This was generated with [mdx-deck][]'s `npm init deck` command.
+[Repo for my talk from Frontend Connect 2019](https://frontend-con.io/speakers-2/#craig)
 
-## Development
-
-To run the presentation deck in development mode:
-
-```sh
-npm start
-```
-
-Edit the [`deck.mdx`](deck.mdx) file to get started.
-
-## Exporting
-
-To build the presentation deck as static HTML:
-
-```sh
-npm run build
-```
-
-For more documentation see the [mdx-deck][] repo.
-
-[mdx-deck]: https://github.com/jxnblk/mdx-deck
+> 🎶MUSIC 🎶 is a powerful, dynamic programming language, which can be used to create truly transformative experiences! Unfortunately, it’s been hindered by convoluted syntax and centuries of technical debt, which can lead to some performance issues…
+>
+> 🎷🎺🎻 Let’s tear music apart, and use a little bit of physics 🏹, a little bit of math 📊, and a whole lot of JavaScript 💻to re-invent the building blocks of the greatest hits of the last 400 years 🎹!
+>
+> Together we will re-implement the primitive components of musical theory, like pitch ⚾️, rhythm 🥁and harmony 🎤, and discover yet another reason to prefer composition over inheritance.

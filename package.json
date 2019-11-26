@@ -1,7 +1,7 @@
 {
   "private": true,
-  "name": "music-101",
-  "version": "1.0.0",
+  "name": "music-101-with-js-bach",
+  "version": "0.0.0",
   "scripts": {
     "start": "mdx-deck deck.mdx",
     "build": "mdx-deck build deck.mdx",
