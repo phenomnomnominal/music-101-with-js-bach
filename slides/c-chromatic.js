@@ -2,19 +2,45 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Flow } from 'vexflow';
 
-import { useAudio } from './context/use-audio';
-import { useTimer } from './context/use-timer';
+import { useScale } from './context/use-scale';
+import * as Notes from './context/notes';
 
 const StaveWrapper = styled.div`
   background: rgba(0, 0, 0, 0.5);
   padding: 0 1rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
+  cursor: pointer;
 `;
 
 export function CChromatic() {
-  const { audio, analyser } = useAudio();
-  const timerRef = useTimer();
+  const toggle = useScale([
+    Notes.C4,
+    Notes.CSharp4,
+    Notes.D4,
+    Notes.DSharp4,
+    Notes.E4,
+    Notes.F4,
+    Notes.FSharp4,
+    Notes.G4,
+    Notes.GSharp4,
+    Notes.A4,
+    Notes.ASharp4,
+    Notes.B4,
+    Notes.C5,
+    Notes.B4,
+    Notes.ASharp4,
+    Notes.A4,
+    Notes.GSharp4,
+    Notes.G4,
+    Notes.FSharp4,
+    Notes.F4,
+    Notes.E4,
+    Notes.DSharp4,
+    Notes.D4,
+    Notes.CSharp4,
+    Notes.C4
+  ]);
 
   const width = 1000;
   const height = 125;
@@ -88,73 +114,7 @@ export function CChromatic() {
     voice.draw(context, stave);
   }, [height, width, container, vf]);
 
-  useEffect(() => {
-    const notes = [
-      261.6256,
-      277.1826,
-      293.6648,
-      311.127,
-      329.6276,
-      349.2282,
-      369.9944,
-      391.9954,
-      415.3047,
-      440.0,
-      466.1638,
-      493.8833,
-      523.2511,
-      493.8833,
-      466.1638,
-      440.0,
-      415.3047,
-      391.9954,
-      369.9944,
-      349.2282,
-      329.6276,
-      311.127,
-      293.6648,
-      277.1826
-    ];
-    const played = [];
-
-    const timer = timerRef.current;
-    function metronome(bpm, callback) {
-      timer.onmessage = scheduler;
-      timer.postMessage('start');
-
-      let nextBeat = audio.currentTime;
-      let secondsPerBeat = 60.0 / bpm;
-      let nextNote = notes.shift();
-
-      function scheduler() {
-        while (nextBeat < audio.currentTime + 0.1) {
-          secondsPerBeat = 60.0 / bpm;
-          callback(nextBeat, secondsPerBeat, nextNote);
-          nextBeat += secondsPerBeat;
-          played.push(nextNote);
-          if (notes.length === 0) {
-            notes.push.apply(notes, played);
-            played.length = 0;
-          }
-          nextNote = notes.shift();
-        }
-      }
-    }
-
-    function beat(time, secondsPerBeat, note) {
-      const osc = audio.createOscillator();
-      osc.frequency.value = note;
-      const gain = audio.createGain();
-      gain.gain.setValueAtTime(0.25, time);
-      gain.gain.exponentialRampToValueAtTime(0.01, time + secondsPerBeat);
-      osc.connect(gain);
-      gain.connect(analyser);
-      osc.start(time);
-      osc.stop(time + secondsPerBeat * 2);
-    }
-
-    return timer && metronome(120, beat);
-  }, [audio, analyser, timerRef]);
-
-  return <StaveWrapper id="c-chromatic" ref={container} />;
+  return (
+    <StaveWrapper id="c-chromatic" ref={container} onClick={() => toggle()} />
+  );
 }

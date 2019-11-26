@@ -2,14 +2,35 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Flow } from 'vexflow';
 
+import { useScale } from './context/use-scale';
+import * as Notes from './context/notes';
+
 const StaveWrapper = styled.div`
   background: rgba(0, 0, 0, 0.5);
   padding: 0 1rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
+  cursor: pointer;
 `;
 
 export function AMinor() {
+  const toggle = useScale([
+    Notes.A2,
+    Notes.B2,
+    Notes.C3,
+    Notes.D3,
+    Notes.E3,
+    Notes.F3,
+    Notes.G3,
+    Notes.A3,
+    Notes.G3,
+    Notes.F3,
+    Notes.E3,
+    Notes.D3,
+    Notes.C3,
+    Notes.B2
+  ]);
+
   const width = 600;
   const height = 125;
 
@@ -76,5 +97,5 @@ export function AMinor() {
     voice.draw(context, stave);
   }, [height, width, container, vf]);
 
-  return <StaveWrapper id="a-minor" ref={container} />;
+  return <StaveWrapper id="a-minor" ref={container} onClick={() => toggle()} />;
 }

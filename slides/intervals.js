@@ -52,6 +52,7 @@ export function Intervals({ perfect = true, major = false, minor = false }) {
               </Button>
             </INTERVAL>
             <TD>A - A</TD>
+            <TD>1:1</TD>
             <TD>440hz</TD>
             <TD>440hz</TD>
           </TR>
@@ -64,6 +65,7 @@ export function Intervals({ perfect = true, major = false, minor = false }) {
               </Button>
             </INTERVAL>
             <TD>A - D</TD>
+            <TD>4:3</TD>
             <TD>440hz</TD>
             <TD>586.66hz</TD>
           </TR>
@@ -76,6 +78,7 @@ export function Intervals({ perfect = true, major = false, minor = false }) {
               </Button>
             </INTERVAL>
             <TD>A - E</TD>
+            <TD>3:2</TD>
             <TD>440hz</TD>
             <TD>660hz</TD>
           </TR>
@@ -88,6 +91,7 @@ export function Intervals({ perfect = true, major = false, minor = false }) {
               </Button>
             </INTERVAL>
             <TD>A - A</TD>
+            <TD>2:1</TD>
             <TD>440hz</TD>
             <TD>880hz</TD>
           </TR>
@@ -100,6 +104,7 @@ export function Intervals({ perfect = true, major = false, minor = false }) {
               </Button>
             </INTERVAL>
             <TD>A - C</TD>
+            <TD>32/27</TD>
             <TD>440hz</TD>
             <TD>523.25Hz</TD>
           </TR>
@@ -112,6 +117,7 @@ export function Intervals({ perfect = true, major = false, minor = false }) {
               </Button>
             </INTERVAL>
             <TD>A - C#</TD>
+            <TD>81/64</TD>
             <TD>440hz</TD>
             <TD>556.88Hz</TD>
           </TR>
@@ -124,6 +130,7 @@ export function Intervals({ perfect = true, major = false, minor = false }) {
               </Button>
             </INTERVAL>
             <TD>A - F</TD>
+            <TD>128/81</TD>
             <TD>440hz</TD>
             <TD>695.3hz</TD>
           </TR>
@@ -136,6 +143,7 @@ export function Intervals({ perfect = true, major = false, minor = false }) {
               </Button>
             </INTERVAL>
             <TD>A - F#</TD>
+            <TD>27/16</TD>
             <TD>440hz</TD>
             <TD>742.5hz</TD>
           </TR>

@@ -22,7 +22,7 @@ const TRIAD = styled.td`
   color: gold;
 `;
 
-export function Triads() {
+export function TriadsMinor() {
   const { audio, analyser } = useAudio();
 
   function makeTriad(frequency1, frequency2, frequency3) {
@@ -53,8 +53,30 @@ export function Triads() {
       <tbody>
         <TR>
           <TRIAD>
+            <Button onClick={() => makeTriad(Notes.A3, Notes.C4, Notes.E4)}>
+              Minor I
+            </Button>
+          </TRIAD>
+          <TD>A - C - E</TD>
+          <TD>220Hz</TD>
+          <TD>261.62Hz</TD>
+          <TD>329.62Hz</TD>
+        </TR>
+        <TR>
+          <TRIAD>
+            <Button onClick={() => makeTriad(Notes.B3, Notes.D4, Notes.F4)}>
+              Diminished II
+            </Button>
+          </TRIAD>
+          <TD>B - D - F</TD>
+          <TD>246.94Hz</TD>
+          <TD>293.66Hz</TD>
+          <TD>349.23Hz</TD>
+        </TR>
+        <TR>
+          <TRIAD>
             <Button onClick={() => makeTriad(Notes.C4, Notes.E4, Notes.G4)}>
-              Major I
+              Major III
             </Button>
           </TRIAD>
           <TD>C - E - G </TD>
@@ -65,7 +87,7 @@ export function Triads() {
         <TR>
           <TRIAD>
             <Button onClick={() => makeTriad(Notes.D4, Notes.F4, Notes.A4)}>
-              Minor II
+              Minor IV
             </Button>
           </TRIAD>
           <TD>D - F - A</TD>
@@ -76,7 +98,7 @@ export function Triads() {
         <TR>
           <TRIAD>
             <Button onClick={() => makeTriad(Notes.E4, Notes.G4, Notes.B4)}>
-              Minor III
+              Minor V
             </Button>
           </TRIAD>
           <TD>E - G - B</TD>
@@ -87,7 +109,7 @@ export function Triads() {
         <TR>
           <TRIAD>
             <Button onClick={() => makeTriad(Notes.F4, Notes.A4, Notes.C5)}>
-              Major IV
+              Major VI
             </Button>
           </TRIAD>
           <TD>F - A - C</TD>
@@ -98,7 +120,7 @@ export function Triads() {
         <TR>
           <TRIAD>
             <Button onClick={() => makeTriad(Notes.G4, Notes.B4, Notes.D5)}>
-              Major V
+              Major VII
             </Button>
           </TRIAD>
           <TD>G - B - D</TD>
@@ -109,35 +131,13 @@ export function Triads() {
         <TR>
           <TRIAD>
             <Button onClick={() => makeTriad(Notes.A4, Notes.C5, Notes.E5)}>
-              Minor VI
+              Minor VIII
             </Button>
           </TRIAD>
           <TD>A - C - E</TD>
           <TD>440Hz</TD>
           <TD>523.25Hz</TD>
           <TD>659.25Hz</TD>
-        </TR>
-        <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.B4, Notes.D5, Notes.F5)}>
-              Diminished VII
-            </Button>
-          </TRIAD>
-          <TD>B - D - F</TD>
-          <TD>493.88Hz</TD>
-          <TD>587.33Hz</TD>
-          <TD>698.45Hz</TD>
-        </TR>
-        <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.C5, Notes.E5, Notes.G5)}>
-              Major VIII
-            </Button>
-          </TRIAD>
-          <TD>C - E - G</TD>
-          <TD>523.25Hz</TD>
-          <TD>659.25Hz</TD>
-          <TD>783.99Hz</TD>
         </TR>
       </tbody>
     </table>

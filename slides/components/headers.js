@@ -1,7 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Character = styled.span``;
+const Character = styled.span`
+  opacity: 1;
+  animation-timing-function: ease-in;
+  animation: appear 1s;
+  animation-iteration-count: 1;
+`;
 
 const Header0Wrapper = styled.h1`
   display: inline-flex;
@@ -37,13 +42,15 @@ const Header1Wrapper = styled.h1`
   padding-bottom: 2rem;
 `;
 
+const H1Character = styled.span``;
+
 export function H1({ text }) {
   return (
     <Header1Wrapper>
       {text.split('').map((c, i) => (
-        <Character key={`${text}_${c}_${i}`}>
+        <H1Character key={`${text}_${c}_${i}`}>
           {c === ' ' ? <span className="whitespace"></span> : c}
-        </Character>
+        </H1Character>
       ))}
     </Header1Wrapper>
   );
@@ -60,13 +67,15 @@ export const Header2Wrapper = styled.h2`
   padding-bottom: 1.5rem;
 `;
 
+const H2Character = styled.span``;
+
 export function H2({ text }) {
   return (
     <Header2Wrapper>
       {text.split('').map((c, i) => (
-        <Character key={`${text}_${c}_${i}`}>
+        <H2Character key={`${text}_${c}_${i}`}>
           {c === ' ' ? <span className="whitespace"></span> : c}
-        </Character>
+        </H2Character>
       ))}
     </Header2Wrapper>
   );

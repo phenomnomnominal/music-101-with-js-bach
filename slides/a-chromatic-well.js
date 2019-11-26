@@ -2,14 +2,46 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Flow } from 'vexflow';
 
+import { useScale } from './context/use-scale';
+import * as Notes from './context/notes';
+
 const StaveWrapper = styled.div`
   background: rgba(0, 0, 0, 0.5);
   padding: 0 1rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
+  cursor: pointer;
 `;
 
 export function AChromaticWell() {
+  const toggle = useScale([
+    Notes.A3,
+    Notes.ASharp3,
+    Notes.B3,
+    Notes.C4,
+    Notes.CSharp4,
+    Notes.D4,
+    Notes.DSharp4,
+    Notes.E4,
+    Notes.F4,
+    Notes.FSharp4,
+    Notes.G4,
+    Notes.GSharp4,
+    Notes.A4,
+    Notes.GSharp4,
+    Notes.G4,
+    Notes.FSharp4,
+    Notes.F4,
+    Notes.E4,
+    Notes.DSharp4,
+    Notes.D4,
+    Notes.CSharp4,
+    Notes.C4,
+    Notes.B3,
+    Notes.ASharp3,
+    Notes.A3
+  ]);
+
   const width = 1000;
   const height = 125;
 
@@ -108,5 +140,11 @@ export function AChromaticWell() {
     voice.draw(context, stave);
   }, [height, width, container, vf]);
 
-  return <StaveWrapper id="a-chromatic-well" ref={container} />;
+  return (
+    <StaveWrapper
+      id="a-chromatic-well"
+      ref={container}
+      onClick={() => toggle()}
+    />
+  );
 }

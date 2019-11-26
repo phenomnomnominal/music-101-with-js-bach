@@ -16,10 +16,14 @@ import { BachWTC } from './slides/bach-wtc';
 import { Beep } from './slides/beep';
 import { CMajor } from './slides/c-major';
 import { CChromatic } from './slides/c-chromatic';
+import { Chords } from './slides/chords';
 import { Clock } from './slides/clock';
 import { Craig } from './slides/craig';
 import { Dynamics } from './slides/dynamics';
 import { Enharmonic } from './slides/enharmonic';
+import { FourChords } from './slides/four-chords';
+import { FourChordsMinor } from './slides/four-chords-minor';
+import { Grammy } from './slides/grammy';
 import { Intervals } from './slides/intervals';
 import { IOI } from './slides/ioi';
 import { Noise } from './slides/noise';
@@ -31,6 +35,7 @@ import { Pop } from './slides/pop';
 import { Rhythm } from './slides/rhythm';
 import { Tempo } from './slides/tempo'
 import { Triads } from './slides/triads'
+import { TriadsMinor } from './slides/triads-minor'
 import { Wave } from './slides/wave';
 
 export const themes = [theme];
@@ -145,7 +150,7 @@ Everything is a wave.
 
 This is the fundamental briliant insight of quantum mechanics.
 
-A wave is a disturbance or variation that transfers energy progressively from point to point in a medium.
+A wave is a disturbance or variation that transfers energy from point to point in a medium.
 
 Audible sound travels as a wave, compressing and contracting the air as it travels from a source, to a reciever.
 
@@ -176,10 +181,6 @@ The amplitude controls how *loud* or *soft* the sound is. The amplitude is respo
 Another way to think about amplitude, is that it is the amount of *energy* that is carried by a wave. The higher the amplitude, the more energy in the wave, and the louder it is.
 
 You can think about this more intuitive by imagining how much energy you put into whispering versus shouting.
-
-AMPLITUDE CONTROL DEMO.
-
-USE GAIN NODE TO SHOW CHANGE IN AMPLITUDE OF MIC INPUT
 </Notes>
 
 ---
@@ -201,7 +202,7 @@ ___
 <Dynamics></Dynamics>
 
 <Notes>
-There are infinite possible values of amplitude. To create a way to talk about the different *dynamics* musicians use the following terms:
+There are infinite possible values of amplitude. To talk about the different *dynamics* musicians use the following terms:
 
 They do not denote any specific volume, but rather are relative to one another.
 </Notes>
@@ -293,6 +294,12 @@ today.getMilliseconds();
 
 ```js
 setInterval(() => {
+  // ...
+}, 1000);
+```
+
+```js
+setInterval(() => {
   const now = new Date();
   const hours = pad(now.getHours());
   const minutes = pad(now.getMinutes());
@@ -309,18 +316,6 @@ function pad (n) {
 </Split>
 
 <Notes>
-
-function work () {
-    let i = 0;
-    const max = 5000000000 * Math.random();
-    while (i < max) {
-        i += 1;
-    }
-    return i;
-}
-
-setInterval(() => console.log(`Did some work: ${work()}`), 5000);
-
 On a clock, time passes at a rate of one second per second. 
 
 We can clap along at a rate of one clap per second, or 60 claps per minute.
@@ -329,7 +324,7 @@ When talking about musical time, we usually refer to the number of Beats per Min
 
 We can clap along at 60 bpm quite happily, but if the clock goes away, we tend to drift.
 
-Luckily, we don't always need to keep track of this ourselves. 
+Luckily, we don't need to keep track of the beat ourselves. 
 
 We can build a specific machine for keeping musical time, called a metronome.
 
@@ -344,6 +339,14 @@ We can build a specific machine for keeping musical time, called a metronome.
 
 <H2 text="Time-keeping"></H2>
 <CodeSurfer>
+
+```js
+function metronome (bpm, callback) {
+  // ...
+}
+
+metronome(120, () => console.log('tick'));
+```
 
 ```js
 function metronome (bpm, callback) {
@@ -370,17 +373,52 @@ But running a timeout on the main thread like this is very unstable, and can be 
 <H2 text="Time-keeping"></H2>
 <CodeSurfer>
 
+
 ```js
 function createWorker (func) {
-  const blob = new Blob([`(${func})();`]);
+  const blob = new Blob([`(${func}).call(self);`]);
+  return new Worker(URL.createObjectURL(blob));
+}
+```
+
+```js
+function createWorker (func) {
+  const blob = new Blob([`(${func}).call(self);`]);
   return new Worker(URL.createObjectURL(blob));
 }
 
 const timerWorker = createWorker(() => {
-  let timerID = null;
-  self.onmessage = function (e) {
+  this.onmessage = function (e) {
+    // ...
+  };
+});
+```
+
+```js
+function createWorker (func) {
+  const blob = new Blob([`(${func}).call(self);`]);
+  return new Worker(URL.createObjectURL(blob));
+}
+
+const timerWorker = createWorker(() => {
+  this.onmessage = function (e) {
     if (e.data === 'start') {
-      timerID = setInterval(() => self.postMessage('tick'), 25);
+      setInterval(() => this.postMessage('tick'), 25);
+    }
+  };
+});
+```
+
+```
+function createWorker (func) {
+  const blob = new Blob([`(${func}).call(self);`]);
+  return new Worker(URL.createObjectURL(blob));
+}
+
+const timerWorker = createWorker(() => {
+  this.onmessage = function (e) {
+    if (e.data === 'start') {
+      setInterval(() => this.postMessage('tick'), 25);
     }
   };
 });
@@ -397,7 +435,8 @@ Instead, we can take the timeout and run it using a Web Worker.
 Web Workers are a browser API that allow you to run JavaScript in a separate thread. It works by asynchronously passing messages back and forth with the main thread. 
 
 The worker thread doesn't get interupted when the main thread gets busy.
-This gives us a much more stable interval:
+
+This gives us a much more stable interval.
 
 Right now, this code knows nothing about the desired BPM. It just sends a "tick" message once every 25 ms, or 40 time a second. We still need to relate that to something in the main thread.
 
@@ -408,6 +447,36 @@ Right now, this code knows nothing about the desired BPM. It just sends a "tick"
 <H2 text="Time-keeping"></H2>
 
 <CodeSurfer> 
+
+```js
+function metronome (bpm, callback) {
+  // ...
+}
+```
+
+```js
+function metronome (bpm, callback) {
+  timerWorker.onmessage = scheduler;
+  timerWorker.postMessage('start');
+  
+  function scheduler() {
+    // ...
+  }
+}
+```
+
+```js
+const audio = new AudioContext();
+function metronome (bpm, callback) {
+  timerWorker.onmessage = scheduler;
+  timerWorker.postMessage('start');
+  let nextBeat = audio.currentTime;
+  
+  function scheduler() {
+    // ...
+  }
+}
+```
 
 ```js
 const audio = new AudioContext();
@@ -435,7 +504,6 @@ JavaScript gives us access to another mechanism for keeping time via the Web Aud
 Combined with our 25ms pulse from the Web Worker, we can very accurately schedule events:
 </Notes>
 
-
 ---
 
 <H1 text="Counting the beat"></H1>
@@ -462,17 +530,19 @@ Let's take another look at the `AudioContext`.
 
 > An audio context controls both the creation of the nodes it contains and the execution of the audio processing.
 
-<!-- * `createMediaStreamSource` - create an `MediaStreamAudioSourceNode` from a input audio source, in our case from my computer's microphone.
+`createMediaStreamSource` | `createAnalyser` | `currentTime`
+
+<Notes>
+
+This whole presentation uses different methods from the `AudioContext`.
+
+* `createMediaStreamSource` - create an `MediaStreamAudioSourceNode` from a input audio source, in our case from my computer's microphone.
 
 * `createAnalyser` - create an `AnalyserNode`, which can access real-time information about an audio stream.
 
 * `createGain` - create a `GainNode`, which controls the volume of an audio stream.
 
-* `currentTime` - the high accuracy timestamp indicating seconds since the AudioContext was created. -->
-
-<Notes>
-
-This presentation has already used a few different methods from the `AudioContext`.
+* `currentTime` - the high accuracy timestamp indicating seconds since the AudioContext was created.
 
 We use another method to create the beep sound: `createOscillator`.
 
@@ -487,15 +557,17 @@ An `OscillatorNode` will emit a ringing sound. We can turn that ringing on and o
 <CodeSurfer>
 
 ```js
-function beep(context) {
-  const gain = context.createGain();
-  gain.connect(context.destination);
-  return function(time) {
-    const osc = context.createOscillator();
-    osc.connect(gain);
-    osc.start(time);
-    osc.stop(time + 0.1);
-  };
+function beep(time) {
+  // ...
+}
+```
+
+```js
+function beep(time) {
+  const osc = audio.createOscillator();
+  osc.connect(audio.destination);
+  osc.start(time);
+  osc.stop(time + 0.1);
 }
 ```
 
@@ -523,16 +595,11 @@ metronome(BEATS_PER_MINUTE, beep(audio));
 
 Sound travels as a wave, which is the change of _amplitude_ through _time_.
 
-We can use JavaScript manupulate sound waves with the **Web Audio API**.
+We can use **JavaScript** to manupulate sound waves with the **Web Audio API**.
 
-We can use a `GainNode`, to manipulate the _amplitude_ and get different _dynamics_.
+We can manipulate the _amplitude_ and get different _dynamics_.
 
 We can use the `currentTime` to trigger events at a given rate of **Beats per Minute** (bpm).
-
----
-
-<H0 text="Pitch"/>
-<Draw draw={false}></Draw>
 
 ---
 
@@ -554,6 +621,34 @@ What happens if we put a bit of extra emphasis on every other beat by increaing 
 <CodeSurfer>
 
 ```js
+const audio = new AudioContext();
+function metronome (bpm, beatsPerMeasure, callback) {
+  timerWorker.onmessage = scheduler;
+  timerWorker.postMessage('start');
+
+  let nextBeat = audio.currentTime;
+  function scheduler() {
+    while (nextBeat < audio.currentTime + 0.1) {
+      callback(nextBeat);
+      nextBeat += 60.0 / bpm;
+    }
+  }
+}
+
+function beat (time) {
+  const osc = audio.createOscillator();
+  const gain = audio.createGain();
+  gain.connect(audio.destination);
+  osc.connect(gain);
+  osc.start(time);
+  osc.stop(time + 0.1);
+}
+
+metronome(120, beatsPerMeasure, beat);
+```
+
+```js
+const audio = new AudioContext();
 function metronome (bpm, beatsPerMeasure, callback) {
   timerWorker.onmessage = scheduler;
   timerWorker.postMessage('start');
@@ -570,20 +665,18 @@ function metronome (bpm, beatsPerMeasure, callback) {
   }
 }
 
-function beat () {
+function beat (time, volume) {
+  const osc = audio.createOscillator();
   const gain = audio.createGain();
   gain.connect(audio.destination);
-  return function (time, volume) {
-    const osc = audio.createOscillator();
-    gain.gain.exponentialRampToValueAtTime(volume, time + 0.05);
-    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
-    osc.connect(gain);
-    osc.start(time);
-    osc.stop(time + 0.1);
-  }
+  gain.gain.exponentialRampToValueAtTime(volume, time + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+  osc.connect(gain);
+  osc.start(time);
+  osc.stop(time + 0.1);
 }
 
-metronome(120, beatsPerMeasure, beat());
+metronome(120, beatsPerMeasure, beat);
 ```
 
 </CodeSurfer>
@@ -611,18 +704,53 @@ Another way we can change our rhythm is by changing it's speed or _tempo_.
 
 Tempo is the musical term for the current rate of beats per minute. It comes from "tempus" the Latin word for time.
 
-There are terms for common speeds, for example;
+There are musical terms for common speeds, for example;
 
 </Notes>
 
 ---
 
+<H0 text="Pitch"/>
+<Draw draw={false}></Draw>
+
+---
 
 <Split>
 <IOI></IOI>
 <Draw draw={true}></Draw>
 
 <CodeSurfer>
+
+```js
+function metronome (bpm, beatsPerMeasure, callback) {
+  timerWorker.onmessage = scheduler;
+  timerWorker.postMessage('start');
+
+  let nextBeat = audio.currentTime;
+  let count = 0;
+
+  function scheduler() {
+    while (nextBeat < audio.currentTime + 0.1) {
+      callback(nextBeat, count % beatsPerMeasure === 0 ? 1 : 0.25);
+      nextBeat += 60.0 / bpm;
+      count = count + 1;
+    }
+  }
+}
+
+function beat (time, volume) {
+  const osc = audio.createOscillator();
+  const gain = audio.createGain();
+  gain.connect(audio.destination);
+  gain.gain.exponentialRampToValueAtTime(volume, time + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+  osc.connect(gain);
+  osc.start(time);
+  osc.stop(time + 0.1);
+}
+
+metronome(120, beatsPerMeasure, beat);
+```
 
 ```js
 const audio = new AudioContext();
@@ -632,31 +760,27 @@ function metronome (beatsPerMeasure, callback) {
   timerWorker.postMessage('start');
   let nextBeat = audio.currentTime;
   let secondsPerBeat = 60.0 / bpm;
-  let count = 0;
   function scheduler() {
     while (nextBeat < audio.currentTime + 0.1) {
       secondsPerBeat = 60.0 / bpm;
-      callback(nextBeat, secondsPerBeat, count % beatsPerMeasure === 0 ? 1 : 0.25);
+      callback(nextBeat, secondsPerBeat);
       nextBeat += secondsPerBeat;
-      count = count + 1;
     }
   }
 }
 
-function beat (context) {
-  const gain = context.createGain();
-  gain.connect(context.destination);
-  return function (time, length, volume) {
-    const osc = context.createOscillator();
-    gain.gain.exponentialRampToValueAtTime(volume, time + length / 4);
-    gain.gain.exponentialRampToValueAtTime(0.01, time + length / 2);
-    osc.connect(gain);
-    osc.start(time);
-    osc.stop(time + length / 2);
-  }
+function beat (time, length) {
+  const osc = audio.createOscillator();
+  const gain = audio.createGain();
+  gain.connect(audio.destination);
+  gain.gain.exponentialRampToValueAtTime(0.15, time + length / 4);
+  gain.gain.exponentialRampToValueAtTime(0.01, time + length / 2);
+  osc.connect(gain);
+  osc.start(time);
+  osc.stop(time + length / 2);
 }
 
-metronome(2, beat(audio));
+metronome(2, beat);
 ```
 
 </CodeSurfer>
@@ -690,7 +814,28 @@ Let's go back from music to physics for a second (although I hope you're startin
 <CodeSurfer>
 
 ```js
+const SECONDS_PER_SECOND = 1;
+```
 
+```js
+const SECONDS_PER_SECOND = 1;
+const SECONDS_PER_MINUTE = 60 * SECONDS_PER_SECOND;
+```
+
+```js
+const SECONDS_PER_SECOND = 1;
+const SECONDS_PER_MINUTE = 60 * SECONDS_PER_SECOND;
+const SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE;
+```
+
+```js
+const SECONDS_PER_SECOND = 1;
+const SECONDS_PER_MINUTE = 60 * SECONDS_PER_SECOND;
+const SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE;
+const SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR;
+```
+
+```js
 const SECONDS_PER_SECOND = 1;
 const SECONDS_PER_MINUTE = 60 * SECONDS_PER_SECOND;
 const SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE;
@@ -700,8 +845,7 @@ function dailyFrequency (nPerDay) {
   return nPerDay / SECONDS_PER_DAY;
 }
 
-const sunrisesPerSecond = dailyFrequency(1);
-// 0.00001157407
+dailyFrequency(1); // 0.00001157407
 ```
 
 </CodeSurfer>
@@ -817,12 +961,9 @@ This particular series of notes have some other names. These notes make up the A
 
 Some of these notes are subdivided even further, giving us the 12 notes of the chromatic scale.
 
-Each of these steps is called a semitone, so 12 semitones make up an octave. A "tone" is then two semitones, e.g. from A to B, or C# to D#.
+Each of these steps is called a semitone, so 12 semitones make up an octave.
 
 A - A# - B - C - C# - D - D# - E - F - F# - G - G# - A
-
-Semitones are subdivided even further into cents. There are 100 cents in a semitone - and thus 1200 cents in one octave.
-
 </Notes>
 
 ---
@@ -831,6 +972,15 @@ Semitones are subdivided even further into cents. There are 100 cents in a semit
 <Draw draw={false}/>
 
 <CodeSurfer>
+
+```js
+const SEMITONES_PER_OCTAVE = 12;
+```
+
+```js
+const SEMITONES_PER_OCTAVE = 12;
+const CENTS_PER_SEMITONE = 100;
+```
 
 ```js
 const SEMITONES_PER_OCTAVE = 12;
@@ -962,7 +1112,11 @@ Let's compare with what we expected!
 
 We've somehow gained two extra notes, and lost one...
 
-<Notes>Where did they come from? We lost A#, gained Bb, and we've added Eb in between D and D#?</Notes>
+<Notes>
+  
+Where did they come from? We lost A#, gained Bb, and we've added Eb in between D and D#?
+
+</Notes>
 
 ---
 
@@ -994,7 +1148,9 @@ Then C
 Then F
 Then Bb
 
-A# and Bb are called enharmonic. They are two different names for the same note, the note directly below B.
+When we go DOWN around the circle of fifths, flats start to appear.
+
+A# and Bb are enharmonic. They are two different names for the same note, the note one semitione below B.
 D# and Eb are also enharmonic!
 These are not the only enharmonic notes. In fact all notes could have multiple different names!
 
@@ -1006,6 +1162,12 @@ These are not the only enharmonic notes. In fact all notes could have multiple d
 <Draw draw={false}/>
 
 <CodeSurfer>
+
+```js
+const E = 660;
+const Eflat = 618.05;
+const Dsharp = 626.48;
+```
 
 ```js
 const E = 660;
@@ -1059,8 +1221,6 @@ So what does this mean? Music doesn't aligns perfectly with the mathematic symme
 
 The facts that we've discovered are all still valid.
 
-Octaves are definitely a 2:1 ratio apart. A perfect 5th is 3:2. And human ears can tell that notes are out of tune with only a few cents difference.
-
 Our music had simply become too advanced! Composers were doing more and more creative things, and the tuning system had to catch up.
 
 This is a difficult problem. If you simply declare that D# and Eb are the same frequency, then some other intervals become more than 5 cents apart, and therefore sound out of tune.
@@ -1113,7 +1273,7 @@ JS Bach's most well-known contributions to music were two sets of compositions e
 
 These pieces were written to be played on keyboard instruments in the well tempered tuning.
 
-It was a groundbreaking work at the time, each containing 24 preludes and 24 fugues, utilising all the keys on the keyboard, and none of it sounding out of tune.
+It was a groundbreaking work at the time, each set containing 24 preludes and 24 fugues, utilising all the keys on the keyboard, and none of it sounding out of tune.
 </Notes>
 
 ---
@@ -1132,7 +1292,9 @@ It was a groundbreaking work at the time, each containing 24 preludes and 24 fug
 * **No. 24**: Prelude and Fugue in **B** *minor*
 
 <Notes>
-And these names were in fact reused for _both_ books.
+It used a particularly inventing naming scheme.
+
+These names were reused for _both_ books.
 </Notes>
 
 ---
@@ -1143,7 +1305,12 @@ And these names were in fact reused for _both_ books.
 <Intervals/>
 
 <Notes>
-We've discussed the names of the different notes, and we discussed a few different combinations of them. Let's go back to this one in particular:
+
+So what does major and minor?
+
+We've discussed the names of the different notes, and we discussed a few different combinations of them. 
+
+Let's go back to this one in particular
 
 These notes make up the A Minor Scale, and notes played from this scale would be said to be in the "Key" of A Minor.
 
@@ -1155,6 +1322,8 @@ A - E is a Perfect fifth
 A (low) - A (high) is a Perfect Octave
 
 They are called "Perfect" is that they are neither major or minor.
+
+But there are also other intervals!
 </Notes>
 
 ---
@@ -1212,9 +1381,9 @@ _Relative_ keys are related by the names of the notes that make up their scales.
 <Draw draw={false}></Draw>
 
 <Notes>
-Now that we know a bit about scales, we know enough to talk about melody.
+Now that we know a bit about scales, and keys, we know enough to talk about melody.
 
-We can create a melody by taking any of the notes from our scale, and playing them in whatever order we like the sound of!
+We can create a melody by taking any of the notes from the scale of a key, and playing them in whatever order we like the sound of!
 
 If you want your melody to sound happy, you would chose a major key, and if you want it to sound sad you would chose a minor key.
 </Notes>
@@ -1226,9 +1395,10 @@ If you want your melody to sound happy, you would chose a major key, and if you 
 <Prelude/>
 
 <Notes>
-We can recreate the famous opening bars from JS Bach's Prelude in C Major, from The Well Tempered Klavier, using just three Notes
+We can recreate the famous opening bars from JS Bach's Prelude in C Major, from The Well Tempered Clavier, using just three notes at different octaves
 
-This is a very simple melody. 
+It is a very simple melody. 
+
 It is made up from the root note (C), the perfect 5th note (G), the percect octave (C), and then uses the third note of the major scale to make it sound happy.
 </Notes>
 
@@ -1262,7 +1432,9 @@ At its most complicated, harmony can involve taking multiple melodies, which all
 
 The Well Tempered Clavier is full of the most masterful examples of harmony, which have inspired many incredible composers in the years since.
 
-The works still drive our understanding of harmony and structure in modern music.
+The Well Tempered Clavier is the benchmark for a type of harmony called counterpoint, which takes much more than one conference talk to describe, let alone master. 
+
+But the ideas from Bachs works still drive our understanding of harmony and structure in modern music, and we can learn a bit more about that!
 </Notes>
 
 ---
@@ -1271,26 +1443,51 @@ The works still drive our understanding of harmony and structure in modern music
 <Draw draw={true}/>
 
 <CChromatic/>
+<Chords/>
+
+<Notes>
+So far, we discussed the relationships between pairs of pitches.
+
+We've talked about their positions relative to each other in scales, and how they work as intervals.
+
+We've named some of those intervals, and given them descriptions like "Major" and "Minor".
+
+Most of the same principles apply to chords as well.11
+
+A chord is three or more notes played at the same time.
+
+Let's look at the chromatic scale again, this time based on the note of C - the "root" note of the scale.
+
+C - Db - D - Eb - E - F - Gb - G - Ab - A - Bb - B - C
+
+Any combination of these notes will create a chord. All these chords will have their own name, and sound, and their own use in music.
+
+Some combinations of these notes are more common than others.
+
+</Notes>
+
+---
+
+<H1 text="C Major triads"/>
+<Draw draw={true}/>
+
+<CMajor/>
+
+<Notes>
+The most common group of chords are called "Traids". They contain three notes! 
+
+You can build up the group of triads for a key pretty easily
+
+Let's take the C major scale again.
+</Notes>
 
 --- 
 
-<H1 text="Triads"/>
+<H1 text="Creating triads"/>
 <Draw draw={true}/>
 <Triads/>
 
 <Notes>
-
-Let's take the C major scale again.
-
-C - C - perfect unison
-C - D - major 2nd
-C - E - major 3rd
-C - F - perfect 4th
-C - G - perfect 5th
-C - A - major 6th
-C - B - major 7th
-C - C - perfect 8ve
-
 We can start on C,
 
 And add the note which is two notes about it in the scale, E
@@ -1330,6 +1527,114 @@ Before the well-tempered system, some combinations of these chords would sound h
 
 ---
 
+<H1 text="Every happy song ever!"/>
+<Draw draw={true}/>
+
+<FourChords/>
+
+<Notes>
+So how do we use these triads?
+
+In western music, specifically western popular music, four of these chords are the most common.
+
+If you've ever heard of "four chord" songs, chances are the chords that were used were:
+
+I triad
+IV triad
+V triad
+VI triad
+
+In the C major scale, those triads are
+
+C
+F
+G
+Am
+
+It is pretty common to play these chords in the following order:
+
+I V VI IV
+
+C G Am F
+
+As you can hear, they just kind of _work_ - and sound pretty familiar to modern ears.
+
+</Notes>
+
+---
+
+<H1 text="Relative Keys"/>
+<Draw draw={false}/>
+
+## This is one octave of the C major scale:
+
+<CMajor/>
+
+## This is one octave of the A minor scale:
+
+<AMinor/>
+
+<Notes>
+Let's talk about relative keys again.
+
+We talked about C major having the following notes,
+
+C - D - E - F - G - A - B - C
+
+And A minor being its relative minor key with the following notes
+
+A - B - C - D - E - F - G - A
+
+</Notes>
+
+---
+
+<H1 text="A Minor triads"/>
+<Draw draw={true}/>
+
+<TriadsMinor/>
+
+---
+
+<H1 text="Every sad song ever!"/>
+<Draw draw={true}/>
+
+<FourChordsMinor/>
+
+<Notes>
+If we go through the process of triad building again, we get the _same chords_, but with different numbers
+
+A C D - I Am
+B D F - II B°
+C E G - III C
+D F A - IV Dm
+E G B - V E
+F A C - VI F
+G B D - VII G
+A C E - I Am
+
+Finding our four chords again, we get
+
+I Am
+III C
+VI F
+VII G
+
+It is pretty common to hear them in the following order:
+
+I VI III VII
+
+Am F C G Am F
+
+     I V VII IV
+
+Which is the same progression, just started from the middle!
+
+This is the foundation of so much modern popular music. These four triad chords, based on different keys, with different melodies.
+</Notes>
+
+---
+
 <H0 text="Mad beats"/>
 <Pop/>
 <Draw draw={true}/>
@@ -1350,6 +1655,101 @@ And boom - instant pop song.
 
 ---
 
+<Grammy/>
+<Draw draw={false}/>
+
+---
+
+<H2 text="So..."/>
+
+---
+
+<H0 text="Dynamics"/>
+<Draw draw={false}/>
+
+<Notes>
+We started with noise. Noise is chaotic.
+
+But noise is also energy, energy that is carried by a wave.
+
+The ammount of energy that a wave carries is controlled the _amplitude_ of the wave.
+
+When we control how much energy a wave has, we subdivide a wave along the vertical axis, and we create dynamics.
+</Notes>
+
+---
+
+<H0 text="Rhythm"/>
+<Draw draw={false}/>
+
+<Notes>
+A sound wave cannot exist in one dimension. The second dimension is time.
+
+We subdivide the wave along the horizontal dimension to give it structure.
+
+We count the repeating patterns in the structure of time.
+
+In music, we measure the frequency of these repetitions in beats per minute.
+
+In physics, we measure the frequency in Hertz.
+
+We can use JavaScript to count beats for us.
+</Notes>
+
+---
+
+<H0 text="Pitch"/>
+<Draw draw={false}/>
+
+<Notes>
+We subdivide pitch to give it structure.
+
+Pythagoras gave us a pretty good system for dividing pitch using the 3:2 ratio
+
+We divide pitch into the 12(ish) notes of the chromatic scale.
+
+But the world doesn't work perfectly with maths, so we had to tweak the system a bit.
+
+By using Well Tempered Tuning, we can get a *good enough* system of notes that work with all the different possible keys.
+
+These notes are our of tune from Pythagorean tuning, but each pitch is within the limits of human hearing.
+</Notes>
+
+---
+
+<H0 text="Melody"/>
+<Draw draw={false}/>
+
+<Notes>
+From the system of pitches defined by the tuning system, you can make scales in different keys, like A minor or C Major.
+
+You can take notes for these scales and arrange them how you like to made melodies!
+
+Johann Sebastian Bach gave the world a masterclass of dynamics, rhythm and melody with his two books of Preludes and Fugues for the Well Tempered Clavier.
+
+They revolutionised music, and are still loved today.
+</Notes>
+
+---
+
+<H0 text="Harmony"/>
+<Draw draw={false}/>
+
+<Notes>
+The Well Tempered Clavier is best known for its incredible counterpoint harmony. Counterpoint harmony is still the foundation of modern harmony.
+
+We can take the scale from a melody, and derive a series of triads which will work well with the notes in the scale.
+
+Certain chords in the Major Scale (I, IV, V, and VI) work particularly well with major melodies.
+
+Changing the order of those chords will change the music from a happy major feeling, to a sad minor feeling.
+
+Lots of pop music uses exactly these chords.
+</Notes>
+
+---
+
 <H0 text="Thank you"/>
+<Pop/>
 <MicrophoneAudio></MicrophoneAudio>
 <Draw draw={true}/>

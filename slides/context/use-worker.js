@@ -5,7 +5,7 @@ export function useWorker(func) {
   useEffect(() => {
     const blob = new Blob([
       `
-(${func})(self);
+(${func}).call(self);
     `
     ]);
     const w = new Worker(URL.createObjectURL(blob));

@@ -5,8 +5,6 @@ import { BODY_TYPE, FOOTER } from '../styles.variables';
 
 const Footer = styled.footer`
   font-family: ${BODY_TYPE};
-  /* background: rgba(0, 0, 0, 0.75); */
-  /* box-shadow: 0px -2px 2px gold; */
   z-index: ${FOOTER};
 
   width: 100%;
@@ -34,7 +32,7 @@ export function ContentFooter() {
   return (
     <Footer>
       <Location>
-        Front End Connect | 2019 |{' '}
+        Frontend Connect | 2019 |{' '}
         <span role="img" aria-label="Poland">
           🇵🇱
         </span>

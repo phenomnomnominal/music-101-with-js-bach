@@ -24,7 +24,12 @@ export function Metronome() {
 
     function beat(time) {
       const osc = audio.createOscillator();
-      osc.connect(analyser);
+      const gain = audio.createGain();
+      gain.gain.setValueAtTime(0, time);
+      gain.gain.exponentialRampToValueAtTime(0.5, time + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+      osc.connect(gain);
+      gain.connect(analyser);
       osc.start(time);
       osc.stop(time + 0.1);
     }

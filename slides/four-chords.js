@@ -16,16 +16,16 @@ const TD = styled.td`
   border-bottom: 1px solid gold;
 `;
 
-const TRIAD = styled.td`
+const Chord = styled.td`
   padding: 0 1rem;
   border-bottom: 1px solid gold;
   color: gold;
 `;
 
-export function Triads() {
+export function FourChords() {
   const { audio, analyser } = useAudio();
 
-  function makeTriad(frequency1, frequency2, frequency3) {
+  function makeChord(frequency1, frequency2, frequency3) {
     const f1 = audio.createOscillator();
     f1.frequency.value = frequency1;
     const f2 = audio.createOscillator();
@@ -52,88 +52,55 @@ export function Triads() {
     <table>
       <tbody>
         <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.C4, Notes.E4, Notes.G4)}>
+          <Chord>
+            <Button onClick={() => makeChord(Notes.C4, Notes.E4, Notes.G4)}>
               Major I
             </Button>
-          </TRIAD>
+          </Chord>
           <TD>C - E - G </TD>
           <TD>261.62Hz</TD>
           <TD>329.62Hz</TD>
           <TD>391.99Hz</TD>
         </TR>
         <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.D4, Notes.F4, Notes.A4)}>
-              Minor II
-            </Button>
-          </TRIAD>
-          <TD>D - F - A</TD>
-          <TD>293.66Hz</TD>
-          <TD>349.23Hz</TD>
-          <TD>440Hz</TD>
-        </TR>
-        <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.E4, Notes.G4, Notes.B4)}>
-              Minor III
-            </Button>
-          </TRIAD>
-          <TD>E - G - B</TD>
-          <TD>329.63Hz</TD>
-          <TD>391.99Hz</TD>
-          <TD>493.88Hz</TD>
-        </TR>
-        <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.F4, Notes.A4, Notes.C5)}>
+          <Chord>
+            <Button onClick={() => makeChord(Notes.F4, Notes.A4, Notes.C5)}>
               Major IV
             </Button>
-          </TRIAD>
+          </Chord>
           <TD>F - A - C</TD>
           <TD>349.23Hz</TD>
           <TD>440Hz</TD>
           <TD>523.25Hz</TD>
         </TR>
         <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.G4, Notes.B4, Notes.D5)}>
+          <Chord>
+            <Button onClick={() => makeChord(Notes.G4, Notes.B4, Notes.D5)}>
               Major V
             </Button>
-          </TRIAD>
+          </Chord>
           <TD>G - B - D</TD>
           <TD>391.99Hz</TD>
           <TD>493.88Hz</TD>
           <TD>587.33Hz</TD>
         </TR>
         <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.A4, Notes.C5, Notes.E5)}>
+          <Chord>
+            <Button onClick={() => makeChord(Notes.A4, Notes.C5, Notes.E5)}>
               Minor VI
             </Button>
-          </TRIAD>
+          </Chord>
           <TD>A - C - E</TD>
           <TD>440Hz</TD>
           <TD>523.25Hz</TD>
           <TD>659.25Hz</TD>
         </TR>
         <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.B4, Notes.D5, Notes.F5)}>
-              Diminished VII
-            </Button>
-          </TRIAD>
-          <TD>B - D - F</TD>
-          <TD>493.88Hz</TD>
-          <TD>587.33Hz</TD>
-          <TD>698.45Hz</TD>
-        </TR>
-        <TR>
-          <TRIAD>
-            <Button onClick={() => makeTriad(Notes.C5, Notes.E5, Notes.G5)}>
+          <Chord>
+            <Button onClick={() => makeChord(Notes.C5, Notes.E5, Notes.G5)}>
               Major VIII
             </Button>
-          </TRIAD>
+          </Chord>
           <TD>C - E - G</TD>
           <TD>523.25Hz</TD>
           <TD>659.25Hz</TD>

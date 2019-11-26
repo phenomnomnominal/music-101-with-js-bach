@@ -1,8 +1,14 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
 import { useAudio } from './context/use-audio';
 import { useTimer } from './context/use-timer';
 
 export function Pop({ minor = true }) {
+  const [masterBPM] = useState(320);
+  const [playMelody] = useState(true);
+  const [playHarmony] = useState(true);
+  const [playBeat] = useState(true);
+
   const { audio, analyser } = useAudio();
   const timerRef = useTimer();
 
@@ -20,7 +26,13 @@ export function Pop({ minor = true }) {
     const played = [];
 
     const timer = timerRef.current;
-    timer.handlers = timer.handlers || [];
+    timer.handlers = [];
+
+    const melodyGain = audio.createGain();
+    melodyGain.gain.value = playMelody ? 0.5 : 0;
+    melodyGain.connect(analyser);
+    const nodes = [melodyGain];
+
     function metronome(bpm, callback) {
       timer.handlers.push(scheduler);
       timer.postMessage('start');
@@ -46,18 +58,26 @@ export function Pop({ minor = true }) {
 
     function beat(time, secondsPerBeat, note) {
       const osc = audio.createOscillator();
+      nodes.push(osc);
       osc.frequency.value = note;
       const gain = audio.createGain();
       gain.gain.setValueAtTime(0.25, time);
       gain.gain.exponentialRampToValueAtTime(0.01, time + secondsPerBeat);
       osc.connect(gain);
-      gain.connect(analyser);
+      gain.connect(melodyGain);
       osc.start(time);
       osc.stop(time + secondsPerBeat * 2);
     }
 
-    return timer && metronome(320, beat);
-  }, [audio, analyser, timerRef, minor]);
+    const result = metronome(masterBPM, beat);
+
+    return () => {
+      nodes.forEach(n => n.disconnect());
+      if (result) {
+        result();
+      }
+    };
+  }, [audio, analyser, timerRef, minor, masterBPM, playMelody]);
 
   useEffect(() => {
     const chords = minor
@@ -76,7 +96,12 @@ export function Pop({ minor = true }) {
     const played = [];
 
     const timer = timerRef.current;
-    timer.handlers = timer.handlers || [];
+
+    const harmonyGain = audio.createGain();
+    harmonyGain.gain.value = playHarmony ? 0.5 : 0;
+    harmonyGain.connect(analyser);
+    const nodes = [harmonyGain];
+
     function metronome(bpm, callback) {
       timer.handlers.push(scheduler);
       timer.postMessage('start');
@@ -103,18 +128,22 @@ export function Pop({ minor = true }) {
     function makeTriad(time, secondsPerBeat, nextChord) {
       const [frequency1, frequency2, frequency3] = nextChord;
       const f1 = audio.createOscillator();
+      nodes.push(f1);
       f1.frequency.value = frequency1;
       const f2 = audio.createOscillator();
+      nodes.push(f2);
       f2.frequency.value = frequency2;
       const f3 = audio.createOscillator();
+      nodes.push(f3);
       f3.frequency.value = frequency3;
-      const gain = audio.createGain();
       f1.start(time + 0.01);
       f1.stop(time + secondsPerBeat * 1.5);
       f2.start(time + 0.01);
       f2.stop(time + secondsPerBeat * 1.5);
       f3.start(time + 0.01);
       f3.stop(time + secondsPerBeat * 1.5);
+      const gain = audio.createGain();
+      gain.connect(harmonyGain);
       gain.gain.setValueAtTime(0, time);
       gain.gain.exponentialRampToValueAtTime(0.25, time + secondsPerBeat / 2);
       gain.gain.exponentialRampToValueAtTime(0.01, time + secondsPerBeat * 1.5);
@@ -124,11 +153,24 @@ export function Pop({ minor = true }) {
       gain.connect(analyser);
     }
 
-    return timer && metronome(320 / 8, makeTriad);
-  }, [audio, analyser, timerRef, minor]);
+    const result = metronome(masterBPM / 8, makeTriad);
+
+    return () => {
+      nodes.forEach(n => n.disconnect());
+      if (result) {
+        result();
+      }
+    };
+  }, [audio, analyser, timerRef, minor, masterBPM, playHarmony]);
 
   useEffect(() => {
     const timer = timerRef.current;
+
+    const beatGain = audio.createGain();
+    beatGain.gain.value = playBeat ? 0.5 : 0;
+    beatGain.connect(analyser);
+    const nodes = [beatGain];
+
     function metronome(bpm, callback) {
       timer.onmessage = () => {
         timer.handlers.forEach(h => h());
@@ -149,19 +191,26 @@ export function Pop({ minor = true }) {
 
     function beat(time, volume) {
       const osc = audio.createOscillator();
+      nodes.push(osc);
       osc.frequency.setValueAtTime(110 / volume, time);
       osc.frequency.exponentialRampToValueAtTime(20, time + 0.1);
       const gain = audio.createGain();
+      gain.connect(beatGain);
       gain.gain.exponentialRampToValueAtTime(volume, time + 0.05);
       gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
-      osc.connect(gain);
-      gain.connect(analyser);
+      osc.connect(beatGain);
       osc.start(time);
       osc.stop(time + 0.1);
     }
 
-    return timer && metronome(320 / 2, beat);
-  }, [audio, analyser, timerRef]);
+    const result = metronome(masterBPM / 2, beat);
+    return () => {
+      nodes.forEach(n => n.disconnect());
+      if (result) {
+        result();
+      }
+    };
+  }, [audio, analyser, timerRef, masterBPM, playBeat]);
 
   return null;
 }

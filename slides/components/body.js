@@ -10,14 +10,6 @@ const BodyWrapper = styled.h3`
   text-align: center;
 `;
 
-const Character = styled.span``;
-
 export function Body({ text }) {
-  return (
-    <BodyWrapper>
-      {text.split('').map((c, i) => (
-        <Character key={`${text}_${c}_${i}`}>{c}</Character>
-      ))}
-    </BodyWrapper>
-  );
+  return <BodyWrapper>{text}</BodyWrapper>;
 }
