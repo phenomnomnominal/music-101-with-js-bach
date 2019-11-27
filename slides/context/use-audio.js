@@ -5,7 +5,7 @@ let gain;
 let analyser;
 let analyserData;
 if (typeof window !== 'undefined') {
-  audio = new window.AudioContext();
+  audio = new (window.AudioContext || window.webkitAudioContext)();
   gain = audio.createGain();
   analyser = audio.createAnalyser();
   analyser.fftSize = 4096;
