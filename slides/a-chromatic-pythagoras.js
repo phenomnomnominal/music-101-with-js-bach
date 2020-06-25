@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Flow } from 'vexflow';
 
 import { useScale } from './context/use-scale';
-import * as Notes from './context/notes';
 
 const StaveWrapper = styled.div`
   background: rgba(0, 0, 0, 0.5);
