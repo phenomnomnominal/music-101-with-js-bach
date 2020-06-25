@@ -32,9 +32,9 @@ export function ContentFooter() {
   return (
     <Footer>
       <Location>
-        Frontend Connect | 2019 |{' '}
-        <span role="img" aria-label="Poland">
-          🇵🇱
+        HolyJS | 2020 |{' '}
+        <span role="img" aria-label="Russia">
+          🇸🇷🇺
         </span>
       </Location>
       <Link href="https://twitter.com/phenomnominal">@phenomnominal</Link>

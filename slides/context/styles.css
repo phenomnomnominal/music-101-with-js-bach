@@ -131,6 +131,11 @@ pre.cs-content code {
   text-align: center;
 }
 
+[class$='-Slide'] > .cs-layout {
+  height: 60vh !important;
+  margin-bottom: 10vh !important;
+}
+
 [class$='-Presenter'] p {
   padding: 2rem 0 0;
   text-align: left;

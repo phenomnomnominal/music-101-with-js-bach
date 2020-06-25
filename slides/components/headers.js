@@ -64,7 +64,6 @@ export const Header2Wrapper = styled.h2`
   line-height: 6rem;
   font-size: 6rem;
   color: gold;
-  padding-bottom: 1.5rem;
 `;
 
 const H2Character = styled.span``;
