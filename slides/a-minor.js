@@ -15,20 +15,21 @@ const StaveWrapper = styled.div`
 
 export function AMinor() {
   const toggle = useScale([
-    Notes.A2,
-    Notes.B2,
-    Notes.C3,
-    Notes.D3,
-    Notes.E3,
-    Notes.F3,
-    Notes.G3,
-    Notes.A3,
-    Notes.G3,
-    Notes.F3,
-    Notes.E3,
-    Notes.D3,
-    Notes.C3,
-    Notes.B2
+    Notes.A4,
+    Notes.B4,
+    Notes.C5,
+    Notes.D5,
+    Notes.E5,
+    Notes.F5,
+    Notes.G5,
+    Notes.A5,
+    Notes.G5,
+    Notes.F5,
+    Notes.E5,
+    Notes.D5,
+    Notes.C5,
+    Notes.B4,
+    Notes.A4,
   ]);
 
   const width = 600;
@@ -57,7 +58,7 @@ export function AMinor() {
       .setFont('Arial', 12, '');
 
     const stave = new Flow.Stave(0, 0, width);
-    stave.addClef('bass');
+    stave.addClef('treble');
 
     stave.setContext(context).draw();
     function getNoteAnnotation(note) {
@@ -68,22 +69,22 @@ export function AMinor() {
 
     function createNote(note, annotation) {
       return new Flow.StaveNote({
-        clef: 'bass',
+        clef: 'treble',
         keys: [note],
         duration: '1',
-        auto_stem: true
+        auto_stem: true,
       }).addAnnotation(0, getNoteAnnotation(annotation));
     }
 
     const notes = [
-      createNote('a/2', 'A'),
-      createNote('b/2', 'B'),
-      createNote('c/3', 'C'),
-      createNote('d/3', 'D'),
-      createNote('e/3', 'E'),
-      createNote('f/3', 'F'),
-      createNote('g/3', 'G'),
-      createNote('a/3', 'A')
+      createNote('a/4', 'A'),
+      createNote('b/4', 'B'),
+      createNote('c/5', 'C'),
+      createNote('d/5', 'D'),
+      createNote('e/5', 'E'),
+      createNote('f/5', 'F'),
+      createNote('g/5', 'G'),
+      createNote('a/5', 'A'),
     ];
 
     const N_BEATS = 8;

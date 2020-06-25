@@ -15,31 +15,19 @@ const StaveWrapper = styled.div`
 
 export function AChromatic() {
   const toggle = useScale([
-    Notes.A3,
-    Notes.ASharp3,
-    Notes.B3,
-    Notes.C4,
-    Notes.CSharp4,
-    Notes.D4,
-    Notes.DSharp4,
-    Notes.E4,
-    Notes.F4,
-    Notes.FSharp4,
-    Notes.G4,
-    Notes.GSharp4,
     Notes.A4,
-    Notes.GSharp4,
-    Notes.G4,
-    Notes.FSharp4,
-    Notes.F4,
-    Notes.E4,
-    Notes.DSharp4,
-    Notes.D4,
-    Notes.CSharp4,
-    Notes.C4,
-    Notes.B3,
-    Notes.ASharp3,
-    Notes.A3
+    Notes.ASharp4,
+    Notes.B4,
+    Notes.C5,
+    Notes.CSharp5,
+    Notes.D5,
+    Notes.DSharp5,
+    Notes.E5,
+    Notes.F5,
+    Notes.FSharp5,
+    Notes.G5,
+    Notes.GSharp5,
+    Notes.A5,
   ]);
 
   const width = 1000;
@@ -68,7 +56,7 @@ export function AChromatic() {
       .setFont('Arial', 12, '');
 
     const stave = new Flow.Stave(0, 0, width);
-    stave.addClef('bass');
+    stave.addClef('treble');
 
     stave.setContext(context).draw();
 
@@ -80,27 +68,27 @@ export function AChromatic() {
 
     function createNote(note, name) {
       return new Flow.StaveNote({
-        clef: 'bass',
+        clef: 'treble',
         keys: [note],
         duration: '1',
-        auto_stem: true
+        auto_stem: true,
       }).addAnnotation(0, getNoteAnnotation(name));
     }
 
     const notes = [
-      createNote('a/2', 'A'),
-      createNote('a#/2', 'A#').addAccidental(0, new Flow.Accidental('#')),
-      createNote('b/2', 'B'),
-      createNote('c/3', 'C'),
-      createNote('c#/3', 'C#').addAccidental(0, new Flow.Accidental('#')),
-      createNote('d/3', 'D'),
-      createNote('d#/3', 'D#').addAccidental(0, new Flow.Accidental('#')),
-      createNote('e/3', 'E'),
-      createNote('f/3', 'F'),
-      createNote('f#/3', 'F#').addAccidental(0, new Flow.Accidental('#')),
-      createNote('g/3', 'G'),
-      createNote('g#/3', 'G#').addAccidental(0, new Flow.Accidental('#')),
-      createNote('a/3', 'A')
+      createNote('a/4', 'A'),
+      createNote('a#/4', 'A#').addAccidental(0, new Flow.Accidental('#')),
+      createNote('b/4', 'B'),
+      createNote('c/5', 'C'),
+      createNote('c#/5', 'C#').addAccidental(0, new Flow.Accidental('#')),
+      createNote('d/5', 'D'),
+      createNote('d#/5', 'D#').addAccidental(0, new Flow.Accidental('#')),
+      createNote('e/5', 'E'),
+      createNote('f/5', 'F'),
+      createNote('f#/5', 'F#').addAccidental(0, new Flow.Accidental('#')),
+      createNote('g/5', 'G'),
+      createNote('g#/5', 'G#').addAccidental(0, new Flow.Accidental('#')),
+      createNote('a/5', 'A'),
     ];
 
     const N_BEATS = 13;

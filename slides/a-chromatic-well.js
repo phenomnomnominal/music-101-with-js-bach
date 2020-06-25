@@ -15,31 +15,32 @@ const StaveWrapper = styled.div`
 
 export function AChromaticWell() {
   const toggle = useScale([
-    Notes.A3,
-    Notes.ASharp3,
-    Notes.B3,
-    Notes.C4,
-    Notes.CSharp4,
-    Notes.D4,
-    Notes.DSharp4,
-    Notes.E4,
-    Notes.F4,
-    Notes.FSharp4,
-    Notes.G4,
-    Notes.GSharp4,
     Notes.A4,
-    Notes.GSharp4,
-    Notes.G4,
-    Notes.FSharp4,
-    Notes.F4,
-    Notes.E4,
-    Notes.DSharp4,
-    Notes.D4,
-    Notes.CSharp4,
-    Notes.C4,
-    Notes.B3,
-    Notes.ASharp3,
-    Notes.A3
+    Notes.ASharp4,
+    Notes.B4,
+    Notes.C5,
+    Notes.CSharp5,
+    Notes.D5,
+    Notes.DSharp5,
+    Notes.DSharp5,
+    Notes.E5,
+    Notes.F5,
+    Notes.FSharp5,
+    Notes.G5,
+    Notes.GSharp5,
+    Notes.A5,
+    Notes.GSharp5,
+    Notes.G5,
+    Notes.FSharp5,
+    Notes.F5,
+    Notes.E5,
+    Notes.DSharp5,
+    Notes.D5,
+    Notes.CSharp5,
+    Notes.C5,
+    Notes.B4,
+    Notes.ASharp4,
+    Notes.A4,
   ]);
 
   const width = 1000;
@@ -88,7 +89,7 @@ export function AChromaticWell() {
         clef: 'treble',
         keys: [note],
         duration: '1',
-        auto_stem: true
+        auto_stem: true,
       })
         .addAnnotation(0, getWellAnnotation(`${well}Hz`))
         .addAnnotation(0, getPythAnnotation(`${pyth}Hz`));
@@ -107,13 +108,13 @@ export function AChromaticWell() {
         new Flow.Accidental('#')
       ),
       createNote('d/5', 587.33, 586.66),
-      createNote('eb/5', 622.25, 618.05).addAccidental(
-        0,
-        new Flow.Accidental('b')
-      ),
       createNote('d#/5', 622.25, 626.48).addAccidental(
         0,
         new Flow.Accidental('#')
+      ),
+      createNote('eb/5', 622.25, 618.05).addAccidental(
+        0,
+        new Flow.Accidental('b')
       ),
       createNote('e/5', 659.25, 660),
       createNote('f/5', 698.46, 695.3),
@@ -126,7 +127,7 @@ export function AChromaticWell() {
         0,
         new Flow.Accidental('#')
       ),
-      createNote('a/5', 880, 880)
+      createNote('a/5', 880, 880),
     ];
 
     const N_BEATS = 14;

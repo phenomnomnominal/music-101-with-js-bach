@@ -2,6 +2,9 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { Flow } from 'vexflow';
 
+import { useScale } from './context/use-scale';
+import * as Notes from './context/notes';
+
 const StaveWrapper = styled.div`
   background: rgba(0, 0, 0, 0.5);
   padding: 0 1rem;
@@ -11,6 +14,23 @@ const StaveWrapper = styled.div`
 `;
 
 export function AChromaticPythagoras() {
+  const toggle = useScale([
+    440,
+    463.54,
+    495,
+    521.48,
+    556.88,
+    586.66,
+    618.05,
+    626.48,
+    660,
+    695.3,
+    724.5,
+    782.22,
+    835.31,
+    880,
+  ]);
+
   const width = 1000;
   const height = 125;
 
@@ -57,7 +77,7 @@ export function AChromaticPythagoras() {
         clef: 'treble',
         keys: [note],
         duration: '1',
-        auto_stem: true
+        auto_stem: true,
       })
         .addAnnotation(0, getNoteAnnotation(name))
         .addAnnotation(0, getFreqAnnotation(`${freq}Hz`));
@@ -95,7 +115,7 @@ export function AChromaticPythagoras() {
         0,
         new Flow.Accidental('#')
       ),
-      createNote('a/5', 'A', 880)
+      createNote('a/5', 'A', 880),
     ];
 
     const N_BEATS = 14;
@@ -109,5 +129,11 @@ export function AChromaticPythagoras() {
     voice.draw(context, stave);
   }, [height, width, container, vf]);
 
-  return <StaveWrapper id="a-chromatic-pythagoras" ref={container} />;
+  return (
+    <StaveWrapper
+      id="a-chromatic-pythagoras"
+      ref={container}
+      onClick={() => toggle()}
+    />
+  );
 }
