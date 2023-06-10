@@ -11,7 +11,7 @@
     "code-surfer": "^3.0.0-beta.1",
     "execa": "^3.4.0",
     "fs-extra": "^8.1.0",
-    "gatsby": "^2.18.4",
+    "gatsby": "^4.25.7",
     "gatsby-plugin-compile-es6-packages": "^2.0.0",
     "gatsby-theme-mdx-deck": "^3.0.13",
     "mdx-deck": "^3.0.13",
